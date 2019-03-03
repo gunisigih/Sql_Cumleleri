@@ -1,0 +1,92 @@
+CREATE VIEW VW_GETPRODUCTS
+WITH ENCRYPTION 
+AS
+SELECT p.ProductName , p.ProductID , p.UnitPrice , c.CategoryName FROM Products p , Categories c
+WHERE c.CategoryID = p.CategoryID
+AND c.CategoryName = 'Beverages'
+
+SELECT * FROM EmployeeTerritories
+WHERE TerritoryID = '19713'
+
+CREATE VIEW VW_GRCUSTOMERS
+AS
+SELECT CustomerID , CompanyName , [Address] , City , Country FROM Customers
+WHERE Country = 'Germany'
+
+INSERT INTO VW_GRCUSTOMERS VALUES ('CNRMK' , 'Bahçeþehir' , 'Beþiktaþ' , 'Ýzmir' , 'Türkiye')
+
+SELECT * FROM VW_GRCUSTOMERS
+
+
+CREATE VIEW VW_NANSPEED1
+AS
+SELECT s.CompanyName , e.FirstName , e.LastName , o.CustomerID FROM Employees AS e
+INNER JOIN Orders AS o ON e.EmployeeID = o.EmployeeID 
+INNER JOIN Shippers AS s ON o.ShipVia = s.ShipperID
+WHERE s.CompanyName = 'Speedy Express' and e.FirstName = 'Nancy' and (o.CustomerID = 'DUMON' or o.CustomerID = 'ALFKI')
+
+
+
+CREATE VIEW VW_PRODUCTS_UPPER_THAN_AVG
+AS
+SELECT od.OrderID , od.Quantity*od.UnitPrice AS [Satýþ Tutarý] FROM [Order Details] as od
+WHERE od.Quantity*od.UnitPrice*(1-od.Discount) > (SELECT AVG(od.Quantity*od.UnitPrice*(1-od.Discount)) FROM [Order Details] AS od)
+
+SELECT * FROM VW_PRODUCTS_UPPER_THAN_AVG
+
+CREATE VIEW VW_ENCOKSATÝLANURUN4
+AS
+SELECT TOP(1) PERCENT p.ProductName , SUM(od.Quantity) AS [SATIÞ MÝKTARI], c.CategoryName FROM [Order Details] AS od
+INNER JOIN Products AS p ON p.ProductID=od.ProductID
+INNER JOIN Categories AS c ON p.CategoryID=c.CategoryID
+GROUP BY p.ProductName , c.CategoryName
+ORDER BY [SATIÞ MÝKTARI] DESC
+
+
+SELECT * FROM VW_ENCOKSATÝLANURUN4
+
+CREATE FUNCTION FN_FAKTORIEL2(@NUMBER INT)
+RETURNS INT
+BEGIN
+DECLARE @RESULT INT=1
+WHILE(@NUMBER > 0)
+
+BEGIN
+	SET @RESULT = @NUMBER*@RESULT
+	SET @NUMBER = @NUMBER - 1
+END 
+RETURN @RESULT
+END
+
+
+
+SELECT dbo.FN_FAKTORIEL2(3)
+
+CREATE FUNCTION FN_PRODUCT_NAME(@id int)
+RETURNS nvarchar(100)
+BEGIN
+RETURN
+( SELECT ProductName FROM Products
+WHERE @id = ProductID
+)
+END
+
+SELECT dbo.FN_PRODUCT_NAME(5)
+
+CREATE FUNCTION FN_PRODUCT_NAME_DETAILS3(@id int)
+RETURNS TABLE
+
+RETURN
+( SELECT ProductName , ProductID , UnitPrice , UnitsInStock , c.CategoryName FROM Products AS p
+INNER JOIN Categories AS c ON c.CategoryID = p.CategoryID
+WHERE  ProductID = @id
+)
+GO
+
+SELECT * FROM dbo.FN_PRODUCT_NAME_DETAILS3(17)
+
+SELECT * FROM Products
+WHERE ProductID = 10
+
+SELECT * FROM Categories
+WHERE CategoryID  = 8

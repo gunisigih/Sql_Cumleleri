@@ -1,0 +1,38 @@
+SELECT * FROM Categories
+WHERE CategoryID = 2
+
+SELECT * FROM Employees
+WHERE City = 'London'
+ORDER BY FirstName ,LastName ASC
+
+SELECT * FROM Products
+WHERE (UnitPrice>=50 and UnitPrice<=80)
+
+SELECT CompanyName , City , Address , Country FROM Customers
+WHERE CompanyName like 'A%'
+
+SELECT CompanyName , City , Address , Country FROM Customers 
+WHERE Fax is NULL
+
+SELECT * FROM Customers
+WHERE (CompanyName like 'A%' and Country = 'Germany')
+
+SELECT * FROM Customers
+WHERE Country not like '%A'
+
+SELECT TOP 5  * FROM Products
+ORDER BY UnitPrice DESC 
+
+SELECT CompanyName FROM Customers
+WHERE CompanyName like '%RESTAURANT%'
+
+SELECT OrderID , OrderDate FROM Orders
+WHERE OrderDate Between '1996-07-04' and '1996-12-31'
+
+SELECT * FROM Categories
+WHERE Description like 'S%' or Description like 'D%' 
+
+SELECT DISTINCT Country FROM Customers
+
+SELECT ProductName AS [Ürün Adý]  , UnitPrice AS [Ürün Fiyatý] , ((UnitPrice * 18) / 100) AS KDV FROM Products
+

@@ -1,0 +1,130 @@
+CREATE FUNCTION FN_KAYIT_SAYISI()
+RETURNS NVARCHAR(100)
+AS
+BEGIN
+	DECLARE @sayi int
+	DECLARE @aciklama NVARCHAR(100)
+	SELECT @sayi = COUNT(*) FROM PRODUCTS
+	IF @sayi > 5000
+	BEGIN 
+		SET @aciklama = '5 BÝNDEN FAZLA KAYIT VAR'
+	END
+	ELSE
+	BEGIN
+		SET @aciklama = '5 BÝNDEN AZ KAYIT VAR'
+	END
+	RETURN @aciklama
+END
+
+------------------------------------------------------------------------------------------------
+CREATE FUNCTION FN_KAYIT_SAYISI1()
+RETURNS @KAYIT TABLE ( TUTULAN_SAYI INT,
+						TOPLAM_KAYIT NVARCHAR(50) )
+AS
+BEGIN
+	DECLARE @sayi int
+	DECLARE @aciklama NVARCHAR(100)
+	SELECT @sayi = COUNT(*) FROM PRODUCTS
+	IF @sayi > 5000
+	BEGIN 
+		SET @aciklama = '5 BÝNDEN FAZLA KAYIT VAR'
+		INSERT INTO @KAYIT VALUES (@sayi , @aciklama)
+	END
+	ELSE
+	BEGIN
+		SET @aciklama = '5 BÝNDEN AZ KAYIT VAR'
+		INSERT INTO @KAYIT VALUES (@sayi ,@aciklama)
+	END
+	RETURN 
+END
+
+
+SELECT * FROM dbo.FN_KAYIT_SAYISI1()
+---------------------------------------------------------------------------------------
+
+Use [Northwind]
+
+IF EXISTS(SELECT * FROM sys.tables WHERE Name = 'DimDate' ) 
+BEGIN
+	PRINT 'DimDate tablosu db de mevcut.'
+END
+ELSE 
+PRINT 'DimDate tablosu db de mevcut deðil.'
+END
+
+
+-----------------------------------------------------------------------------------------
+
+--1.deneme
+
+CREATE FUNCTION FN_AVG_FIYAT_BUYUK_ELLI2()
+RETURNS NVARCHAR(50)
+AS
+BEGIN 
+DECLARE @aciklama NVARCHAR(50)
+WHILE(SELECT AVG(UnitPrice) FROM Products) < 200
+BEGIN
+	EXEC sp_UPDATE
+	IF(SELECT MAX(UnitPrice) FROM Products) > 200
+	BEGIN 
+		SET @aciklama = 'Bir ürünün birim fiyatý elliden fazla oldu.'
+		BREAK
+	END
+
+	ELSE
+	BEGIN 
+		CONTINUE
+	END
+END
+
+RETURN @aciklama
+END
+
+
+CREATE PROCEDURE sp_UPDATE
+AS
+UPDATE Products SET UnitPrice = UnitPrice*2
+
+SELECT dbo.FN_AVG_FIYAT_BUYUK_ELLI2()
+
+
+--2. deneme
+
+CREATE PROCEDURE sp_AVG_BUYUK_ELLI4
+@return_value NVARCHAR(50) OUTPUT
+AS 
+DECLARE @aciklama NVARCHAR(50)
+BEGIN
+WHILE(SELECT AVG(UnitPrice) FROM Products) < 50
+BEGIN
+	UPDATE Products SET UnitPrice = UnitPrice*2
+	IF(SELECT MAX(UnitPrice) FROM Products) > 50
+	BEGIN 
+		SET @aciklama = 'Elliden büyük bir ürün var.'
+		BREAK
+	END
+
+	ELSE
+	BEGIN 
+		
+		CONTINUE
+	END
+
+END
+END
+
+DECLARE @result NVARCHAR(50)
+EXEC sp_AVG_BUYUK_ELLI3 @aciklama = @result OUTPUT
+PRINT @result
+
+
+
+CREATE PROCEDURE GetImmediateManager  
+   @employeeID INT,  
+   @managerID NVARCHAR(50) OUTPUT  
+AS  
+BEGIN  
+   SELECT ManagerID = @managerID
+   FROM Employees
+   WHERE EmployeeID = @employeeID  
+END

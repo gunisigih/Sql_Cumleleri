@@ -1,0 +1,24 @@
+--SELECT p.ProductName , c.CompanyName ,  SUM(od.Quantity) AS [Toplam Satýþ] , MIN(od.Quantity) AS [Min Satýþ] , MAX(od.Quantity) AS [Max Satýþ] , AVG(od.Quantity) AS [Ortalama Sipariþ] , COUNT(*) AS [Sipariþ Tekrarý Sayýsý]
+--FROM Customers AS c 
+--INNER JOIN Orders AS o
+--ON c.CustomerID = o.CustomerID
+--INNER JOIN [Order Details] AS od
+--ON od.OrderID= o.OrderID
+--INNER JOIN Products AS p
+--ON od.ProductID = p.ProductID
+--GROUP BY c.CompanyName ,p.ProductName  
+--HAVING COUNT(*) >= 1
+--ORDER BY p.ProductName
+
+
+--SELECT  a.LastName AS Name , a.Title AS Title  , b.LastName , b.Title AS Title , COUNT(*) AS [Workers Count] FROM Employees AS a
+--INNER JOIN Employees AS b ON a.Title = b.Title
+--GROUP BY a.Title , b.Title , a.LastName , b.LastName
+--HAVING COUNT(*)>=1
+--ORDER BY a.Title , b.Title
+
+--select distinct a.FirstName,a.LastName,b.FirstName,b.LastName,a.Title
+--from Employees a
+--inner join Employees b on a.Title=b.Title
+--where a.EmployeeID<=b.EmployeeID
+

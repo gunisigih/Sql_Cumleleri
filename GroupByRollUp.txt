@@ -1,0 +1,38 @@
+CREATE TABLE booksales ( 
+Country VARCHAR(35),
+Genre varchar(20) not null check (Genre IN('Fiction' , 'Non-fiction' )),
+Year INT,
+Sales INT);
+
+
+
+INSERT INTO booksales VALUES 
+('Senegal' , 'Fiction' , 2014 , 12234),
+('Senegal' , 'Fiction' , 2015 , 15647),
+('Senegal' , 'Non-fiction' , 2014 , 64980),
+('Senegal' , 'Non-fiction' , 2015 , 78901 ),
+('Paraguay' , 'Fiction' , 2014 , 87970 ),
+('Paraguay' , 'Fiction' , 2015 , 76940),
+('Paraguay' , 'Non-Fiction' , 2014 , 8760),
+('Paraguay' , 'Non-Fiction' , 2015 , 9030);
+
+
+SELECT Year , SUM(Sales) AS [Sales Total]
+FROM booksales
+GROUP BY Year;
+
+SELECT Year , SUM(Sales) AS [Sales Total]
+FROM booksales
+GROUP BY Year WITH ROLLUP;
+
+SELECT Country , Year , Genre , SUM(Sales)
+FROM booksales
+GROUP BY Country , Year , Genre WITH ROLLUP;
+
+SELECT Country , Year , Genre , SUM(Sales)
+FROM booksales
+GROUP BY Country , Year , Genre WITH ROLLUP ORDER BY Year DESC ;
+
+SELECT Country , Year , Genre , SUM(Sales)
+FROM booksales
+GROUP BY Country , Year , Genre WITH CUBE;
